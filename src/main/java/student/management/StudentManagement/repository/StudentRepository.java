@@ -13,10 +13,6 @@ public interface StudentRepository {
   @Select("SELECT * FROM students")
   List<Student> getAllStudents();
 
-  //  #{name}はsearchByNameの引数に渡されたものが入る
-  @Select("SELECT * FROM students WHERE name = #{name}")
-  List<Student> searchByName(String name);
-
   //  コース全件取得
   @Select("SELECT * FROM students_courses")
   List<StudentCourse> getAllCourses();
