@@ -19,13 +19,15 @@ public class StudentService {
   }
 
   public List<Student> getAllStudents() {
-    repository.getAllStudents();
 //    課題：年齢が30代のみを抽出、抽出したリストをコントローラーに渡す
-    return repository.getAllStudents();
+    return repository.getAllStudents().stream()
+        .filter(student -> student.getAge() >= 30 && student.getAge() <= 39)
+        .toList();
   }
 
   public List<StudentCourse> getAllCourses() {
 //    課題：Javaコースのコース情報を抽出、抽出したリストをコントローラーに渡す
-    return repository.getAllCourses();
+    return repository.getAllCourses().stream()
+        .filter(course -> course.getCourseName().equals("Javaフルコース")).toList();
   }
 }
