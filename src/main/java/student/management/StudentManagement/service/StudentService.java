@@ -25,4 +25,12 @@ public class StudentService {
   public List<StudentCourses> getAllCourses() {
     return repository.getAllCourses();
   }
+
+  public void registerStudent(String id, String name, String kanaName, String nickname,
+      String email,
+      String city, int age, String gender, String remark, boolean isDeleted) {
+    repository.registerStudent(id, name, kanaName, nickname, email, city, age, gender, remark,
+        isDeleted);
+  }
+
 }

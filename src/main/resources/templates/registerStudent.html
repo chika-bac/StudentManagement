@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>受講生登録</title>
+</head>
+<body>
+<h1>受講生登録</h1>
+<!-- th: action: registerStudentのURL
+th: object: registerStudentの引数 -->
+<form th:action="@{/registerStudent}" th:object="${studentDetail}" method="post">
+  <div>
+    <label for="name">名前: </label>
+    <input type="text" id="name" th:field="*{student.name}" required>
+  </div>
+  <div>
+    <label for="kanaName">ふりがな: </label>
+    <input type="text" id="kanaName" th:field="*{student.kanaName}" required>
+  </div>
+  <div>
+    <label for="nickname">ニックネーム: </label>
+    <input type="text" id="nickname" th:field="*{student.nickname}" required>
+  </div>
+  <div>
+    <label for="email">メールアドレス: </label>
+    <input type="email" id="email" th:field="*{student.email}" required>
+  </div>
+  <div>
+    <label for="city">エリア: </label>
+    <input type="text" id="city" th:field="*{student.city}" required>
+  </div>
+  <div>
+    <label for="age">年齢: </label>
+    <input type="text" id="age" th:field="*{student.age}" required>
+  </div>
+  <div>
+    <label>性別: </label>
+    <label>
+      <input type="radio" name="gender" value="男性" th:field="*{student.gender}"> 男性
+    </label>
+    <label>
+      <input type="radio" name="gender" value="女性" th:field="*{student.gender}"> 女性
+    </label>
+    <label>
+      <input type="radio" name="gender" value="その他" th:field="*{student.gender}"> その他
+    </label>
+  </div>
+  <div>
+    <button type="submit">登録</button>
+  </div>
+</form>
+</body>
+</html>
