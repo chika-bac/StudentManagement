@@ -32,10 +32,6 @@ public class StudentService {
     //    課題：新規受講生をDBに登録する
 //    idにUUIDをセット
     String studentId = UUID.randomUUID().toString();
-    studentDetail.getStudent().setId(studentId);
-
-//    idDeletedフラグをセット
-    studentDetail.getStudent().setDeleted(false);
 
     String name = studentDetail.getStudent().getName();
     String kanaName = studentDetail.getStudent().getKanaName();
