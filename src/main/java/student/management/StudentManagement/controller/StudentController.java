@@ -1,7 +1,6 @@
 package student.management.StudentManagement.controller;
 
 import java.util.List;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,24 +58,7 @@ public class StudentController {
       return "registerStudent";
     }
 
-//    課題：新規受講生をDBに登録する
-//    idにUUIDをセット
-    String studentId = UUID.randomUUID().toString();
-    studentDetail.getStudent().setId(studentId);
-
-//    idDeletedフラグをセット
-    studentDetail.getStudent().setDeleted(false);
-
-    String name = studentDetail.getStudent().getName();
-    String kanaName = studentDetail.getStudent().getKanaName();
-    String nickname = studentDetail.getStudent().getNickname();
-    String email = studentDetail.getStudent().getEmail();
-    String city = studentDetail.getStudent().getCity();
-    int age = studentDetail.getStudent().getAge();
-    String gender = studentDetail.getStudent().getGender();
-
-    service.registerStudent(studentId, name, kanaName, nickname, email,
-        city, age, gender, null, false);
+    service.registerStudent(studentDetail);
 
 //    全件画面にリダイレクト
     return "redirect:/students";
