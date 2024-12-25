@@ -41,8 +41,7 @@ public class StudentService {
     int age = studentDetail.getStudent().getAge();
     String gender = studentDetail.getStudent().getGender();
 
-    repository.registerStudent(studentId, name, kanaName, nickname, email, city, age, gender,
-        null,
+    repository.registerStudent(studentId, name, kanaName, nickname, email, city, age, gender, null,
         false);
   }
 
