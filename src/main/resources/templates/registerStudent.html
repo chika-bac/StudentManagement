@@ -19,7 +19,7 @@ th: object: registerStudentの引数 -->
   </div>
   <div>
     <label for="nickname">ニックネーム: </label>
-    <input type="text" id="nickname" th:field="*{student.nickname}" required>
+    <input type="text" id="nickname" th:field="*{student.nickname}">
   </div>
   <div>
     <label for="email">メールアドレス: </label>
@@ -31,7 +31,7 @@ th: object: registerStudentの引数 -->
   </div>
   <div>
     <label for="age">年齢: </label>
-    <input type="text" id="age" th:field="*{student.age}" required>
+    <input type="text" id="age" th:field="*{student.age}">
   </div>
   <div>
     <label>性別: </label>
@@ -44,6 +44,20 @@ th: object: registerStudentの引数 -->
     <label>
       <input type="radio" name="gender" value="その他" th:field="*{student.gender}"> その他
     </label>
+  </div>
+  <div>
+    <label for="remark">備考: </label>
+    <input type="text" id="remark" th:field="*{student.remark}">
+  </div>
+  <div th:each="course, stat : *{studentCourses}">
+        <label for="courseName">受講コース名：</label>
+        <input type="text"
+               id="courseName"
+               th:id="studentCourse.__${stat.index}__.courseName"
+               th:field="*{studentCourses[__${stat.index}__].courseName}"
+        >
+  </div>
+
   </div>
   <div>
     <button type="submit">登録</button>

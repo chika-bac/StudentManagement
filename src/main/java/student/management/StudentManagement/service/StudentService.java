@@ -1,9 +1,11 @@
 package student.management.StudentManagement.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import student.management.StudentManagement.data.Student;
 import student.management.StudentManagement.data.StudentCourses;
 import student.management.StudentManagement.domain.StudentDetail;
@@ -28,21 +30,21 @@ public class StudentService {
     return repository.getAllCourses();
   }
 
+  @Transactional
   public void registerStudent(StudentDetail studentDetail) {
-    //    課題：新規受講生をDBに登録する
 //    idにUUIDをセット
     String studentId = UUID.randomUUID().toString();
+    studentDetail.getStudent().setId(studentId);
 
-    String name = studentDetail.getStudent().getName();
-    String kanaName = studentDetail.getStudent().getKanaName();
-    String nickname = studentDetail.getStudent().getNickname();
-    String email = studentDetail.getStudent().getEmail();
-    String city = studentDetail.getStudent().getCity();
-    int age = studentDetail.getStudent().getAge();
-    String gender = studentDetail.getStudent().getGender();
+    repository.registerStudent(studentDetail.getStudent());
 
-    repository.registerStudent(studentId, name, kanaName, nickname, email, city, age, gender, null,
-        false);
+//    コース情報を登録（studentCoursesはリストなのでループでセット）
+    for (StudentCourses studentCourse : studentDetail.getStudentCourses()) {
+      studentCourse.setStudentId(studentId);
+      studentCourse.setStartDate(LocalDateTime.now());
+      studentCourse.setEndDate(LocalDateTime.now().plusYears(1));
+      repository.registerStudentCourses(studentCourse);
+    }
   }
 
 }
