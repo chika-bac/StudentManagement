@@ -1,6 +1,6 @@
 package student.management.StudentManagement.data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +11,6 @@ public class StudentCourses {
   private String id;
   private String studentId;
   private String courseName;
-  private Date startDate;
-  private Date endDate;
+  private LocalDateTime startDate;
+  private LocalDateTime endDate;
 }

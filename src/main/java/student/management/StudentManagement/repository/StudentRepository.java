@@ -3,6 +3,7 @@ package student.management.StudentManagement.repository;
 import java.util.List;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import student.management.StudentManagement.data.Student;
 import student.management.StudentManagement.data.StudentCourses;
@@ -19,9 +20,13 @@ public interface StudentRepository {
   List<StudentCourses> getAllCourses();
 
   //  学生情報を追加
-  @Insert("INSERT students VALUES(#{id}, #{name}, #{kanaName}, #{nickname}, #{email}, #{city}, #{age}, #{gender}, #{remark}, #{isDeleted})")
-  void registerStudent(String id, String name, String kanaName, String nickname, String email,
-      String city, int age, String gender, String remark, boolean isDeleted);
+  @Insert("INSERT students VALUES(#{id}, #{name}, #{kanaName}, #{nickname}, #{email}, #{city}, #{age}, #{gender}, #{remark}, false)")
+  void registerStudent(Student student);
+
+  //  コース情報を登録
+  @Insert("INSERT students_courses(student_id, course_name, start_date, end_date) VALUES(#{studentId}, #{courseName}, #{startDate}, #{endDate})")
+  @Options(useGeneratedKeys = true, keyProperty = "id")
+  void registerStudentCourses(StudentCourses studentCourses);
 }
 
 
