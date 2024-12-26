@@ -4,10 +4,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import student.management.StudentManagement.controller.converter.StudentConverter;
 import student.management.StudentManagement.data.Student;
 import student.management.StudentManagement.data.StudentCourses;
+import student.management.StudentManagement.domain.StudentDetail;
 import student.management.StudentManagement.service.StudentService;
 
 @Controller
@@ -32,10 +36,31 @@ public class StudentController {
     return "studentList";
   }
 
-
   //  students_courses全件取得
   @GetMapping("/students_courses")
   public List<StudentCourses> getAllCourses() {
     return service.getAllCourses();
+  }
+
+  //  学生新規登録画面を表示
+  @GetMapping("/newStudent")
+  public String newStudent(Model model) {
+    model.addAttribute("studentDetail", new StudentDetail());
+    return "registerStudent";
+  }
+
+  //  学生新規登録
+  @PostMapping("/registerStudent")
+//      BindingResult result: 入力チェック内容
+  public String registerStudent(@ModelAttribute StudentDetail studentDetail, BindingResult result) {
+    if (result.hasErrors()) {
+//      registerStudent.htmlを表示
+      return "registerStudent";
+    }
+
+    service.registerStudent(studentDetail);
+
+//    全件画面にリダイレクト
+    return "redirect:/students";
   }
 }
