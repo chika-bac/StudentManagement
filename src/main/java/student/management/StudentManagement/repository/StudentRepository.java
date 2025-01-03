@@ -27,6 +27,11 @@ public interface StudentRepository {
   @Insert("INSERT students_courses(student_id, course_name, start_date, end_date) VALUES(#{studentId}, #{courseName}, #{startDate}, #{endDate})")
   @Options(useGeneratedKeys = true, keyProperty = "id")
   void registerStudentCourses(StudentCourses studentCourses);
+
+  //  受講生情報を1件取得
+  @Select("SELECT * FROM students WHERE id = #{id}")
+  Student findStudentById(String id);
+
 }
 
 

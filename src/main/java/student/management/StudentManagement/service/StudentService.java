@@ -47,4 +47,8 @@ public class StudentService {
     }
   }
 
+  //  学生情報をidで検索
+  public Student findStudentById(String id) {
+    return repository.findStudentById(id);
+  }
 }

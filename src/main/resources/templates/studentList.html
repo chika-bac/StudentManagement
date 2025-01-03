@@ -31,6 +31,7 @@
     <td th:text="${studentDetail.student.age}">20</td>
     <td th:text="${studentDetail.student.gender}">男</td>
     <td th:text="${studentDetail.student.remark}">特になし</td>
+    <td><a th:href="@{'/student/' + ${studentDetail.student.id}}">詳細を見る</a></td>
   </tr>
   </tbody>
 </table>
