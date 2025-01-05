@@ -55,7 +55,6 @@ public class StudentController {
 
   //  学生新規登録
   @PostMapping("/registerStudent")
-//      BindingResult result: 入力チェック内容
   public String registerStudent(@ModelAttribute StudentDetail studentDetail, BindingResult result) {
     if (result.hasErrors()) {
 //      registerStudent.htmlを表示
@@ -71,8 +70,16 @@ public class StudentController {
   //  個別の学生情報画面を表示
   @GetMapping("/student/{id}")
   public String findStudentById(@PathVariable("id") String id, Model model) {
+    StudentDetail studentDetail = new StudentDetail();
+//    学生情報を取得・セット
     Student student = service.findStudentById(id);
-    model.addAttribute("student", student);
+    studentDetail.setStudent(student);
+
+//    コース情報を取得・セット
+    List<StudentCourses> studentCourses = service.findStudentCourses(id);
+    studentDetail.setStudentCourses(studentCourses);
+
+    model.addAttribute("studentDetail", studentDetail);
     return "updateStudent";
   }
 }

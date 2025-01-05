@@ -32,6 +32,9 @@ public interface StudentRepository {
   @Select("SELECT * FROM students WHERE id = #{id}")
   Student findStudentById(String id);
 
+  //  学生に紐づくコース情報を取得
+  @Select("SELECT * FROM students_courses WHERE student_id = #{studentId}")
+  List<StudentCourses> findStudentCourses(String studentId);
 }
 
 

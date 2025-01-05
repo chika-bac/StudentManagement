@@ -51,4 +51,9 @@ public class StudentService {
   public Student findStudentById(String id) {
     return repository.findStudentById(id);
   }
+
+  //  コース情報をstudentIdで検索
+  public List<StudentCourses> findStudentCourses(String studentId) {
+    return repository.findStudentCourses(studentId);
+  }
 }
