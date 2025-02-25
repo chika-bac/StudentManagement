@@ -38,10 +38,13 @@ public class StudentController {
     return "studentList";
   }
 
-  //  students_courses全件取得
-  @GetMapping("/students_courses")
-  public List<StudentCourses> getAllCourses() {
-    return service.getAllCourses();
+  //  個別の学生情報画面を表示
+  @GetMapping("/student/{id}")
+  public String getStudent(@PathVariable("id") String id, Model model) {
+    StudentDetail studentDetail = service.searchStudent(id);
+
+    model.addAttribute("studentDetail", studentDetail);
+    return "updateStudent";
   }
 
   //  学生新規登録画面を表示
@@ -67,19 +70,14 @@ public class StudentController {
     return "redirect:/students";
   }
 
-  //  個別の学生情報画面を表示
-  @GetMapping("/student/{id}")
-  public String findStudentById(@PathVariable("id") String id, Model model) {
-    StudentDetail studentDetail = new StudentDetail();
-//    学生情報を取得・セット
-    Student student = service.findStudentById(id);
-    studentDetail.setStudent(student);
-
-//    コース情報を取得・セット
-    List<StudentCourses> studentCourses = service.findStudentCourses(id);
-    studentDetail.setStudentCourses(studentCourses);
-
-    model.addAttribute("studentDetail", studentDetail);
-    return "updateStudent";
+  //  学生情報を更新
+  @PostMapping("/updateStudent")
+  public String updateStudent(@ModelAttribute StudentDetail studentDetail, BindingResult result) {
+    if (result.hasErrors()) {
+      return "updateStudent";
+    }
+//    学生情報の更新
+    service.updateStudent(studentDetail);
+    return "redirect:/students";
   }
 }

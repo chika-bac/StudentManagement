@@ -47,13 +47,29 @@ public class StudentService {
     }
   }
 
-  //  学生情報をidで検索
-  public Student findStudentById(String id) {
-    return repository.findStudentById(id);
+  //  学生・コース情報をstudent_idで検索
+  public StudentDetail searchStudent(String id) {
+//    学生個別ページの情報を取得
+    Student student = repository.searchStudent(id);
+    List<StudentCourses> studentCourses = repository.searchStudentCourses(student.getId());
+
+//    取得した学生情報をstudentDetailにセット
+    StudentDetail studentDetail = new StudentDetail();
+    studentDetail.setStudent(student);
+    studentDetail.setStudentCourses(studentCourses);
+    return studentDetail;
   }
 
-  //  コース情報をstudentIdで検索
-  public List<StudentCourses> findStudentCourses(String studentId) {
-    return repository.findStudentCourses(studentId);
+  //  学生情報・コース情報の更新
+  @Transactional
+  public void updateStudent(StudentDetail studentDetail) {
+//    学生情報を更新
+    repository.updateStudent(studentDetail.getStudent());
+
+//    コース情報を更新
+    for (StudentCourses studentCourse : studentDetail.getStudentCourses()) {
+      studentCourse.setStudentId(studentDetail.getStudent().getId());
+      repository.updateStudentCourses(studentCourse);
+    }
   }
 }
