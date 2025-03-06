@@ -13,7 +13,7 @@ import student.management.StudentManagement.data.StudentCourses;
 public interface StudentRepository {
 
   //  受講生情報全件取得
-  @Select("SELECT * FROM students")
+  @Select("SELECT * FROM students WHERE is_deleted = false")
   List<Student> getAllStudents();
 
   //  コース全件取得
@@ -41,7 +41,7 @@ public interface StudentRepository {
 
   //  学生情報を更新
   @Update("UPDATE students SET name = #{name}, kana_name = #{kanaName}, nickname =  #{nickname}, "
-      + "email = #{email}, city = #{city}, age = #{age}, gender = #{gender}, remark = #{remark} WHERE id = #{id}")
+      + "email = #{email}, city = #{city}, age = #{age}, gender = #{gender}, remark = #{remark}, is_deleted = #{deleted} WHERE id = #{id}")
   void updateStudent(Student student);
 
   //  コース情報を更新
