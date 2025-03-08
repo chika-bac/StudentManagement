@@ -3,20 +3,21 @@ package student.management.StudentManagement.controller;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import student.management.StudentManagement.controller.converter.StudentConverter;
 import student.management.StudentManagement.data.Student;
 import student.management.StudentManagement.data.StudentCourses;
 import student.management.StudentManagement.domain.StudentDetail;
 import student.management.StudentManagement.service.StudentService;
 
-@Controller
+@RestController
 public class StudentController {
 
   private StudentService service;
@@ -31,20 +32,10 @@ public class StudentController {
 
   //  受講生・コース情報を全件取得
   @GetMapping("/students")
-  public String getAllStudents(Model model) {
+  public List<StudentDetail> getAllStudents(Model model) {
     List<Student> students = service.getAllStudents();
     List<StudentCourses> studentCourses = service.getAllCourses();
-    model.addAttribute("studentList", converter.convertStudentDetails(students, studentCourses));
-    return "studentList";
-  }
-
-  //  個別の学生情報画面を表示
-  @GetMapping("/student/{id}")
-  public String getStudent(@PathVariable("id") String id, Model model) {
-    StudentDetail studentDetail = service.searchStudent(id);
-
-    model.addAttribute("studentDetail", studentDetail);
-    return "updateStudent";
+    return converter.convertStudentDetails(students, studentCourses);
   }
 
   //  学生新規登録画面を表示
@@ -72,12 +63,9 @@ public class StudentController {
 
   //  学生情報を更新
   @PostMapping("/updateStudent")
-  public String updateStudent(@ModelAttribute StudentDetail studentDetail, BindingResult result) {
-    if (result.hasErrors()) {
-      return "updateStudent";
-    }
-//    学生情報の更新
+//  ResponseEntity<T>: POSTが成功・失敗したかどうか
+  public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail) {
     service.updateStudent(studentDetail);
-    return "redirect:/students";
+    return ResponseEntity.ok("更新処理が成功しました。");
   }
 }
