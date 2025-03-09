@@ -31,7 +31,7 @@ public class StudentService {
   }
 
   @Transactional
-  public void registerStudent(StudentDetail studentDetail) {
+  public StudentDetail registerStudent(StudentDetail studentDetail) {
 //    idにUUIDをセット
     String studentId = UUID.randomUUID().toString();
     studentDetail.getStudent().setId(studentId);
@@ -45,6 +45,7 @@ public class StudentService {
       studentCourse.setEndDate(LocalDateTime.now().plusYears(1));
       repository.registerStudentCourses(studentCourse);
     }
+    return studentDetail;
   }
 
   //  学生・コース情報をstudent_idで検索
