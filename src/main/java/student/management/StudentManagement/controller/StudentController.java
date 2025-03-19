@@ -3,6 +3,7 @@ package student.management.StudentManagement.controller;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import student.management.StudentManagement.service.StudentService;
 /**
  * 受講生の検索や登録・更新などを行うREST APIとして受け付けるController
  */
+@Validated
 @RestController
 public class StudentController {
 
@@ -46,7 +48,7 @@ public class StudentController {
   public StudentDetail getStudent(@PathVariable("id") String id) {
     return service.searchStudent(id);
   }
-  
+
   /**
    * 受講生詳細の登録。
    *
