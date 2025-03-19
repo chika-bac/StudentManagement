@@ -6,28 +6,50 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import student.management.StudentManagement.controller.converter.StudentConverter;
 import student.management.StudentManagement.data.Student;
 import student.management.StudentManagement.data.StudentCourses;
 import student.management.StudentManagement.domain.StudentDetail;
 import student.management.StudentManagement.repository.StudentRepository;
 
+/**
+ * 受講生情報を取り扱うサービス。受講生の検索や登録・更新処理を行います。
+ */
 @Service
 public class StudentService {
 
   private StudentRepository repository;
+  private StudentConverter converter;
 
-  //  コンストラクタ
   @Autowired
-  public StudentService(StudentRepository repository) {
+  public StudentService(StudentRepository repository, StudentConverter converter) {
     this.repository = repository;
+    this.converter = converter;
   }
 
-  public List<Student> getAllStudents() {
-    return repository.getAllStudents();
+  /**
+   * 受講生一覧検索機能。全件検索を行うので、条件指定は行いません。
+   *
+   * @return 受講生一覧（全件）
+   */
+  public List<StudentDetail> getAllStudents() {
+    List<Student> studentList = repository.getAllStudents();
+    List<StudentCourses> studentCoursesList = repository.getAllCourses();
+    return converter.convertStudentDetails(studentList, studentCoursesList);
   }
 
-  public List<StudentCourses> getAllCourses() {
-    return repository.getAllCourses();
+  /**
+   * 受講生検索。 IDに紐づく任意の受講生情報を取得した後、受講生に紐づくコース情報を取得して設定します。
+   *
+   * @param id 受講生ID
+   * @return 受講生
+   */
+  public StudentDetail searchStudent(String id) {
+//    学生個別ページの情報を取得
+    Student student = repository.searchStudent(id);
+    List<StudentCourses> studentCourses = repository.searchStudentCourses(student.getId());
+//    取得した学生情報をstudentDetailにセット
+    return new StudentDetail(student, studentCourses);
   }
 
   @Transactional
@@ -45,19 +67,6 @@ public class StudentService {
       studentCourse.setEndDate(LocalDateTime.now().plusYears(1));
       repository.registerStudentCourses(studentCourse);
     }
-    return studentDetail;
-  }
-
-  //  学生・コース情報をstudent_idで検索
-  public StudentDetail searchStudent(String id) {
-//    学生個別ページの情報を取得
-    Student student = repository.searchStudent(id);
-    List<StudentCourses> studentCourses = repository.searchStudentCourses(student.getId());
-
-//    取得した学生情報をstudentDetailにセット
-    StudentDetail studentDetail = new StudentDetail();
-    studentDetail.setStudent(student);
-    studentDetail.setStudentCourses(studentCourses);
     return studentDetail;
   }
 
