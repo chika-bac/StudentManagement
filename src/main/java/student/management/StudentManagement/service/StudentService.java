@@ -28,7 +28,7 @@ public class StudentService {
   }
 
   /**
-   * 受講生一覧検索機能。全件検索を行うので、条件指定は行いません。
+   * 受講生詳細一覧の検索機能。全件検索を行うので、条件指定は行いません。
    *
    * @return 受講生一覧（全件）
    */
@@ -39,7 +39,7 @@ public class StudentService {
   }
 
   /**
-   * 受講生検索。 IDに紐づく任意の受講生情報を取得した後、受講生に紐づくコース情報を取得して設定します。
+   * 受講生詳細検索。 IDに紐づく任意の受講生情報を取得した後、受講生に紐づくコース情報を取得して設定します。
    *
    * @param id 受講生ID
    * @return 受講生
@@ -52,6 +52,12 @@ public class StudentService {
     return new StudentDetail(student, studentCourses);
   }
 
+  /**
+   * 受講生詳細の登録を行います。 受講生とコース情報を個別に登録し、コース情報には受講生情報を紐づける値とコース開始日・終了日を設定します。
+   *
+   * @param studentDetail 受講生詳細
+   * @return 登録情報を付与した受講生詳細
+   */
   @Transactional
   public StudentDetail registerStudent(StudentDetail studentDetail) {
 //    idにUUIDをセット
@@ -61,25 +67,42 @@ public class StudentService {
     repository.registerStudent(studentDetail.getStudent());
 
 //    コース情報を登録（studentCoursesはリストなのでループでセット）
-    for (StudentCourses studentCourse : studentDetail.getStudentCourses()) {
-      studentCourse.setStudentId(studentId);
-      studentCourse.setStartDate(LocalDateTime.now());
-      studentCourse.setEndDate(LocalDateTime.now().plusYears(1));
-      repository.registerStudentCourses(studentCourse);
-    }
+    studentDetail.getStudentCourseList().forEach(studentCourse -> {
+      initStudentCourse(studentCourse, studentId);
+      repository.registerStudentCourse(studentCourse);
+    });
+
     return studentDetail;
   }
 
-  //  学生情報・コース情報の更新
+  /**
+   * コース情報を登録する際の初期情報を設定します。
+   *
+   * @param studentCourse コース情報
+   * @param studentId     受講生ID
+   */
+  private void initStudentCourse(StudentCourses studentCourse, String studentId) {
+    LocalDateTime now = LocalDateTime.now();
+
+    studentCourse.setStudentId(studentId);
+    studentCourse.setStartDate(now);
+    studentCourse.setEndDate(now.plusYears(1));
+  }
+
+  /**
+   * 受講生詳細の更新を行います。 受講生情報・コース情報をそれぞれ更新します。
+   *
+   * @param studentDetail 受講生詳細
+   */
   @Transactional
   public void updateStudent(StudentDetail studentDetail) {
-//    学生情報を更新
+//    学生情報
     repository.updateStudent(studentDetail.getStudent());
 
-//    コース情報を更新
-    for (StudentCourses studentCourse : studentDetail.getStudentCourses()) {
+//    コース情報
+    studentDetail.getStudentCourseList().forEach(studentCourse -> {
       studentCourse.setStudentId(studentDetail.getStudent().getId());
       repository.updateStudentCourses(studentCourse);
-    }
+    });
   }
 }
