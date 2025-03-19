@@ -8,10 +8,19 @@ import student.management.StudentManagement.data.Student;
 import student.management.StudentManagement.data.StudentCourses;
 import student.management.StudentManagement.domain.StudentDetail;
 
+/**
+ * 受講生詳細を受講生やコース情報、もしくはその逆の変換を行うコンバーターです。
+ */
 @Component
 public class StudentConverter {
 
-  //    全受講生情報・コースのリストを作成
+  /**
+   * 受講生に紐づくコース情報をマッピングします。 コース情報は受講生に対して複数存在するので、ループを回して受講生情報を組み立てます。
+   *
+   * @param students       受講生一覧
+   * @param studentCourses コース情報のリスト
+   * @return 受講生情報のリスト
+   */
   public List<StudentDetail> convertStudentDetails(List<Student> students,
       List<StudentCourses> studentCourses) {
     List<StudentDetail> studentDetails = new ArrayList<>();
