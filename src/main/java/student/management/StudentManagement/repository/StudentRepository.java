@@ -1,11 +1,7 @@
 package student.management.StudentManagement.repository;
 
 import java.util.List;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 import student.management.StudentManagement.data.Student;
 import student.management.StudentManagement.data.StudentCourses;
 
@@ -27,7 +23,6 @@ public interface StudentRepository {
    *
    * @return 受講生コース情報（全件）
    */
-  @Select("SELECT * FROM students_courses")
   List<StudentCourses> getAllCourses();
 
   /**
@@ -44,7 +39,6 @@ public interface StudentRepository {
    * @param studentId 受講生ID
    * @return 受講生IDに紐づくコース情報
    */
-  @Select("SELECT * FROM students_courses WHERE student_id = #{studentId}")
   List<StudentCourses> searchStudentCourses(String studentId);
 
   /**
@@ -52,8 +46,6 @@ public interface StudentRepository {
    *
    * @param student 受講生
    */
-  @Insert("INSERT students VALUES(#{id}, #{name}, #{kanaName}, #{nickname}, #{email}, #{city},"
-      + " #{age}, #{gender}, #{remark}, false)")
   void registerStudent(Student student);
 
   /**
@@ -61,9 +53,6 @@ public interface StudentRepository {
    *
    * @param studentCourses 受講生コース情報
    */
-  @Insert("INSERT students_courses(student_id, course_name, start_date, end_date)"
-      + " VALUES(#{studentId}, #{courseName}, #{startDate}, #{endDate})")
-  @Options(useGeneratedKeys = true, keyProperty = "id")
   void registerStudentCourse(StudentCourses studentCourses);
 
   /**
@@ -71,8 +60,6 @@ public interface StudentRepository {
    *
    * @param student 受講生
    */
-  @Update("UPDATE students SET name = #{name}, kana_name = #{kanaName}, nickname =  #{nickname}, "
-      + "email = #{email}, city = #{city}, age = #{age}, gender = #{gender}, remark = #{remark}, is_deleted = #{isDeleted} WHERE id = #{id}")
   void updateStudent(Student student);
 
   /**
@@ -80,7 +67,6 @@ public interface StudentRepository {
    *
    * @param studentCourses 受講生コース情報
    */
-  @Update("UPDATE students_courses SET course_name = #{courseName} WHERE id = #{id}")
   void updateStudentCourses(StudentCourses studentCourses);
 }
 

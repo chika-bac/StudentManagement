@@ -1,5 +1,7 @@
 package student.management.StudentManagement.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +47,7 @@ public class StudentController {
    * @return 受講生
    */
   @GetMapping("/student/{id}")
-  public StudentDetail getStudent(@PathVariable("id") String id) {
+  public StudentDetail getStudent(@PathVariable("id") @Size(min = 1, max = 36) String id) {
     return service.searchStudent(id);
   }
 
@@ -56,7 +58,8 @@ public class StudentController {
    * @return 実行結果
    */
   @PostMapping("/registerStudent")
-  public ResponseEntity<StudentDetail> registerStudent(@RequestBody StudentDetail studentDetail) {
+  public ResponseEntity<StudentDetail> registerStudent(
+      @RequestBody @Valid StudentDetail studentDetail) {
     StudentDetail response = service.registerStudent(studentDetail);
     return ResponseEntity.ok(response);
   }
