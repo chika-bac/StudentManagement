@@ -48,12 +48,11 @@ public class StudentService {
    */
   public StudentDetail searchStudent(String id) {
 //    学生個別ページの情報を取得
-    Student student = repository.searchStudent(id);
-//    学生が見つからない場合、エラーを返す
-    if (student == null) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-          "ID: " + id + "の学生は見つかりませんでした。");
-    }
+    Student student = repository.searchStudent(id)
+        //    学生が見つからない場合（null）は例外処理
+        .orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                "ID: " + id + "の学生は見つかりませんでした。"));
     List<StudentCourses> studentCourses = repository.searchStudentCourses(student.getId());
 //    取得した学生情報をstudentDetailにセット
     return new StudentDetail(student, studentCourses);

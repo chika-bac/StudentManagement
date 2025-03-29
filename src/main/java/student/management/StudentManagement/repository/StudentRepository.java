@@ -1,6 +1,7 @@
 package student.management.StudentManagement.repository;
 
 import java.util.List;
+import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
 import student.management.StudentManagement.data.Student;
 import student.management.StudentManagement.data.StudentCourses;
@@ -29,9 +30,9 @@ public interface StudentRepository {
    * 受講生の検索を行います。
    *
    * @param id 受講生ID
-   * @return 受講生
+   * @return 受講生(or null)
    */
-  Student searchStudent(String id);
+  Optional<Student> searchStudent(String id);
 
   /**
    * 受講生IDに紐づくコース情報を検索します。
