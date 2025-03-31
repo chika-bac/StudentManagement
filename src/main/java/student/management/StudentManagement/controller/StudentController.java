@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import student.management.StudentManagement.domain.StudentDetail;
+import student.management.StudentManagement.exception.TestException;
 import student.management.StudentManagement.service.StudentService;
 
 /**
@@ -75,5 +76,16 @@ public class StudentController {
   public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail) {
     service.updateStudent(studentDetail);
     return ResponseEntity.ok("更新処理が成功しました。");
+  }
+
+  /**
+   * 例外発生用のメソッドです。
+   *
+   * @return String
+   * @throws TestException
+   */
+  @GetMapping("/studentException")
+  public String getTestException() throws TestException {
+    throw new TestException("現在このAPIは利用できません。新しいURLは「students」です。");
   }
 }
