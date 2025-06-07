@@ -1,0 +1,57 @@
+package student.management.StudentManagement.service;
+
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import student.management.StudentManagement.controller.converter.StudentConverter;
+import student.management.StudentManagement.data.Student;
+import student.management.StudentManagement.data.StudentCourses;
+import student.management.StudentManagement.repository.StudentRepository;
+
+@ExtendWith(MockitoExtension.class)
+class StudentServiceTest {
+
+  @Mock
+  private StudentRepository repository;
+
+  @Mock
+  private StudentConverter converter;
+
+  private StudentService sut;
+
+  //  テスト前に呼ばれる、セットアップ
+  @BeforeEach
+  void before() {
+    sut = new StudentService(repository, converter);
+  }
+
+
+  @Test
+  void 受講生詳細の一覧検索_リポジトリとコンバーターの処理が適切に呼び出せること() {
+//    モックデータを準備（repository, converterの呼び出し確認のため）
+    List<Student> studentList = new ArrayList<>();
+    List<StudentCourses> studentCoursesList = new ArrayList<>();
+
+//    想定の挙動を設定
+//    repository.getAllStudents()を呼び出すとstudentListを返す
+    when(repository.getAllStudents()).thenReturn(studentList);
+    when(repository.getAllCourses()).thenReturn(studentCoursesList);
+
+//    実際にテスト対象のメソッドを呼ぶ
+    sut.getAllStudents();
+
+//    確認
+//    sut.getAllStudents()でrepository.getAllStudents() が1回呼ばれたか確認
+    verify(repository, times(1)).getAllStudents();
+    verify(repository, times(1)).getAllCourses();
+    verify(converter, times(1)).convertStudentDetails(studentList, studentCoursesList);
+  }
+}
