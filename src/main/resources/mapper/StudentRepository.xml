@@ -26,7 +26,7 @@
 
   <!-- 受講生の新規登録 -->
   <insert id="registerStudent">
-    INSERT students VALUES(#{id}, #{name}, #{kanaName}, #{nickname}, #{email}, #{city}, #{age},
+    INSERT INTO students VALUES(#{id}, #{name}, #{kanaName}, #{nickname}, #{email}, #{city}, #{age},
     #{gender}, #{remark}, false)
   </insert>
 
