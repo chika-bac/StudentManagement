@@ -2,11 +2,13 @@ package student.management.StudentManagement.repository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import student.management.StudentManagement.data.Student;
+import student.management.StudentManagement.data.StudentCourses;
 
 @MybatisTest
 class StudentRepositoryTest {
@@ -18,6 +20,31 @@ class StudentRepositoryTest {
   void 受講生の全件検索が行えること() {
     List<Student> actual = sut.getAllStudents();
     assertThat(actual.size()).isEqualTo(5);
+  }
+
+  @Test
+  void コース情報の全件検索が行えること() {
+    List<StudentCourses> actual = sut.getAllCourses();
+    assertThat(actual.size()).isEqualTo(6);
+  }
+
+  @Test
+  void 受講生の検索ができること() {
+    String id = "11111111-1111-1111-1111-111111111111";
+    Student actual = sut.searchStudent(id)
+        .orElseThrow(() -> new AssertionError("学生が見つかりません"));
+
+    assertThat(actual.getName()).isEqualTo("山田 太郎");
+  }
+
+
+  @Test
+  void 受講生IDに紐づくコース情報の検索ができること() {
+    String studentId = "11111111-1111-1111-1111-111111111111";
+    List<StudentCourses> actual = sut.searchStudentCourses(studentId);
+
+    assertThat(actual.size()).isEqualTo(2);
+    assertThat(actual.get(0).getCourseName()).isEqualTo("AWSフルコース");
   }
 
   @Test
@@ -38,4 +65,44 @@ class StudentRepositoryTest {
     assertThat(actual.size()).isEqualTo(6);
   }
 
+  @Test
+  void 受講生コース情報の新規登録ができること() {
+    StudentCourses studentCourses = new StudentCourses();
+    studentCourses.setStudentId("22222222-2222-2222-2222-222222222222");
+    studentCourses.setCourseName("Webマーケティングコース");
+    studentCourses.setStartDate(LocalDateTime.now());
+    studentCourses.setEndDate(LocalDateTime.now().plusYears(1));
+
+    sut.registerStudentCourse(studentCourses);
+
+    List<StudentCourses> actual = sut.searchStudentCourses("22222222-2222-2222-2222-222222222222");
+    assertThat(actual.size()).isEqualTo(2);
+    assertThat(actual.get(1).getCourseName()).isEqualTo("Webマーケティングコース");
+  }
+
+  @Test
+  void 受講生情報の更新ができること() {
+    String id = "33333333-3333-3333-3333-333333333333";
+    Student student = sut.searchStudent(id)
+        .orElseThrow(() -> new AssertionError("学生が見つかりません"));
+
+    student.setCity("北海道");
+    sut.updateStudent(student);
+
+    Student actual = sut.searchStudent(id)
+        .orElseThrow(() -> new AssertionError("学生が見つかりません"));
+    assertThat(actual.getCity()).isEqualTo("北海道");
+  }
+
+  @Test
+  void コース情報の更新ができること() {
+    String studentId = "44444444-4444-4444-4444-444444444444";
+    List<StudentCourses> studentCourses = sut.searchStudentCourses(studentId);
+    studentCourses.get(0).setCourseName("デザインコース");
+
+    sut.updateStudentCourses(studentCourses.get(0));
+
+    List<StudentCourses> actual = sut.searchStudentCourses(studentId);
+    assertThat(actual.get(0).getCourseName()).isEqualTo("デザインコース");
+  }
 }
