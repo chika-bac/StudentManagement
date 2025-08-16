@@ -16,5 +16,6 @@ CREATE TABLE students_courses (
     student_id  CHAR(36)      NOT NULL,
     course_name VARCHAR(100)  NOT NULL,
     start_date  DATE,
-    end_date    DATE
+    end_date    DATE,
+    FOREIGN KEY (student_id) REFERENCES students(id)
 );
