@@ -59,18 +59,18 @@ class StudentRepositoryTest {
     assertThat(actual.get(0).getCourseName()).isEqualTo("AWSフルコース");
   }
 
+  @Test
+  void 存在しない受講生IDに紐づくコース情報を検索した場合は空を返すこと() {
+    String studentId = "99999999-9999-9999-9999-999999999999";
+    List<StudentCourses> actual = sut.searchStudentCourses(studentId);
+
+    assertThat(actual.isEmpty());
+  }
+
   //  ========== 登録 ==========
   @Test
   void 受講生の登録が行えること() {
-    Student student = new Student();
-    student.setId("f7b82a17-71b4-96f4-09d3-1ffc4bf1ba91");
-    student.setName("山田太郎");
-    student.setKanaName("ヤマダタロウ");
-    student.setNickname("タロウ");
-    student.setEmail("taro@example.com");
-    student.setCity("東京都新宿区");
-    student.setAge(22);
-    student.setGender("男性");
+    Student student = setStudent("f7b82a17-71b4-96f4-09d3-1ffc4bf1ba91");
 
     sut.registerStudent(student);
 
@@ -80,16 +80,8 @@ class StudentRepositoryTest {
 
   @Test
   void 登録時に既存の受講生IDが重複した場合はプライマリーキー制約違反の例外が発生すること() {
-    Student student = new Student();
     // DBに存在するIDで登録
-    student.setId("11111111-1111-1111-1111-111111111111");
-    student.setName("山田太郎");
-    student.setKanaName("ヤマダタロウ");
-    student.setNickname("タロウ");
-    student.setEmail("taro@example.com");
-    student.setCity("東京都新宿区");
-    student.setAge(22);
-    student.setGender("男性");
+    Student student = setStudent("11111111-1111-1111-1111-111111111111");
 
 //    例外発生の検証
     assertThatThrownBy(() -> sut.registerStudent(student))
@@ -133,6 +125,16 @@ class StudentRepositoryTest {
   }
 
   @Test
+  void 存在しない受講生IDで更新しようとした場合何も更新されないこと() {
+    Student student = setStudent("99999999-9999-9999-9999-999999999999");
+
+    sut.updateStudent(student);
+
+//    updateStudent実行後もデータが存在しないことを確認
+    assertThat(sut.searchStudent(student.getId())).isEmpty();
+  }
+
+  @Test
   void コース情報の更新ができること() {
     String studentId = "44444444-4444-4444-4444-444444444444";
     List<StudentCourses> studentCourses = sut.searchStudentCourses(studentId);
@@ -142,6 +144,19 @@ class StudentRepositoryTest {
 
     List<StudentCourses> actual = sut.searchStudentCourses(studentId);
     assertThat(actual.get(0).getCourseName()).isEqualTo("デザインコース");
+  }
+
+  private static Student setStudent(String studentId) {
+    Student student = new Student();
+    student.setId(studentId);
+    student.setName("山田太郎");
+    student.setKanaName("ヤマダタロウ");
+    student.setNickname("タロウ");
+    student.setEmail("taro@example.com");
+    student.setCity("東京都新宿区");
+    student.setAge(22);
+    student.setGender("男性");
+    return student;
   }
 
   private static StudentCourses setStudentCourses(String studentId) {
