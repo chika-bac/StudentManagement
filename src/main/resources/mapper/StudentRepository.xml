@@ -32,7 +32,7 @@
 
   <!-- 受講生コース情報の新規登録 -->
   <insert id="registerStudentCourse" useGeneratedKeys="true" keyProperty="id">
-    INSERT students_courses(student_id, course_name, start_date, end_date) VALUES(#{studentId},
+    INSERT INTO students_courses(student_id, course_name, start_date, end_date) VALUES(#{studentId},
     #{courseName}, #{startDate}, #{endDate})
   </insert>
 
